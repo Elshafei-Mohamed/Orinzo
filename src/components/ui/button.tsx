@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent-hover)] active:scale-[0.98] focus-visible:ring-[var(--accent)] shadow-sm',
+          'bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90 active:scale-[0.98] focus-visible:ring-[var(--accent)] shadow-sm',
         secondary:
           'bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:opacity-90 active:scale-[0.98] focus-visible:ring-[var(--secondary)]',
         outline:
@@ -24,6 +24,10 @@ const buttonVariants = cva(
           'bg-[var(--success)] text-white hover:opacity-90 active:scale-[0.98] focus-visible:ring-[var(--success)]',
         link:
           'text-[var(--accent)] underline-offset-4 hover:underline bg-transparent',
+        gold:
+          'bg-gradient-to-r from-[#F8CB63] via-[#D48D3B] to-[#6B431C] text-white hover:opacity-90 active:scale-[0.98] focus-visible:ring-[#D48D3B] shadow-sm',
+        purple:
+          'bg-gradient-to-r from-[#B34BFF] via-[#6032E6] to-[#1D34C3] text-white hover:opacity-90 active:scale-[0.98] focus-visible:ring-[#B34BFF] shadow-sm',
       },
       size: {
         sm: 'h-8 px-3 text-sm rounded-md',

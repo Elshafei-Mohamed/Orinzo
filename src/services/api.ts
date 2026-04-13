@@ -43,15 +43,24 @@ async function fetchWithCache<T>(url: string, ttl = CACHE_TTL): Promise<T | null
   try {
     const response = await fetch(url, {
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 60 },
+      signal: AbortSignal.timeout(10000),
     });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (!response.ok) {
+      if (cached) {
+        console.warn(`Fetch failed for ${url}, using cached data`);
+        return cached.data as T;
+      }
+      return null;
+    }
     const data = await response.json() as T;
     cache.set(url, { data, timestamp: Date.now() });
     return data;
   } catch (error) {
-    console.error(`Fetch failed for ${url}:`, error);
-    return (cached?.data as T) || null;
+    console.warn(`Fetch failed for ${url}:`, error);
+    if (cached) {
+      return cached.data as T;
+    }
+    return null;
   }
 }
 

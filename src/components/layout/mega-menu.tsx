@@ -36,7 +36,9 @@ export function MegaMenu({ className }: MegaMenuProps) {
     };
   }, []);
 
-  const activeNavCategory = NAVIGATION_CATEGORIES.find((c) => c.slug === activeCategory);
+  const activeNavCategory = NAVIGATION_CATEGORIES.find(
+    (c) => c.slug === activeCategory,
+  );
   const subcategorySlugs = activeNavCategory?.children || [];
   const subcategories = subcategorySlugs
     .map((slug) => CATEGORIES.find((c) => c.slug === slug))
@@ -51,7 +53,7 @@ export function MegaMenu({ className }: MegaMenuProps) {
       <div className="flex items-center gap-1">
         <Link
           href="/products"
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium hover:text-[var(--accent)] transition-colors"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium hover:text-accent transition-colors"
         >
           All Products
         </Link>
@@ -63,8 +65,8 @@ export function MegaMenu({ className }: MegaMenuProps) {
             className={cn(
               "flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors",
               activeCategory === category.slug
-                ? "text-[var(--accent)]"
-                : "hover:text-[var(--accent)]",
+                ? "text-accent"
+                : "hover:text-accent",
             )}
           >
             {category.name}
@@ -80,29 +82,32 @@ export function MegaMenu({ className }: MegaMenuProps) {
 
       {activeCategory && (
         <div
-          className="absolute left-0 top-full w-full bg-[var(--card)] border-t border-[var(--border)] shadow-xl animate-fade-in z-[var(--z-dropdown)]"
+          className="absolute left-0 top-full w-full bg-white border-t border-gray-200 shadow-xl animate-fade-in z-35"
           onMouseEnter={() => handleMouseEnter(activeCategory)}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
             <div className="grid grid-cols-5 gap-8">
               <div className="col-span-2">
-                <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
+                <h3 className="text-lg font-semibold text-foreground mb-4">
                   {CATEGORIES.find((c) => c.slug === activeCategory)?.name}
                 </h3>
                 <div className="space-y-3">
-                  {subcategories.map((sub) => sub && (
-                    <Link
-                      key={sub.id}
-                      href={`/products?category=${sub.slug}`}
-                      className="block text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors"
-                    >
-                      {sub.name}
-                    </Link>
-                  ))}
+                  {subcategories.map(
+                    (sub) =>
+                      sub && (
+                        <Link
+                          key={sub.id}
+                          href={`/products?category=${sub.slug}`}
+                          className="block text-sm text-muted-foreground hover:text-accent transition-colors"
+                        >
+                          {sub.name}
+                        </Link>
+                      ),
+                  )}
                 </div>
                 <Link
                   href={`/products?category=${activeCategory}`}
-                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent hover:text-accent-hover transition-colors"
                 >
                   View All
                   <ChevronRight className="h-4 w-4" />
@@ -114,9 +119,9 @@ export function MegaMenu({ className }: MegaMenuProps) {
                     <Link
                       key={i}
                       href={`/products?category=${activeCategory}`}
-                      className="group relative aspect-[4/3] overflow-hidden rounded-xl"
+                      className="group relative aspect-4/3 overflow-hidden rounded-xl"
                     >
-                      <div className="absolute inset-0 bg-[var(--muted)]">
+                      <div className="absolute inset-0 bg-muted">
                         <img
                           src={
                             CATEGORIES.find((c) => c.slug === activeCategory)
@@ -126,7 +131,7 @@ export function MegaMenu({ className }: MegaMenuProps) {
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
                       <div className="absolute bottom-4 left-4 text-white">
                         <p className="font-medium">Featured</p>
                         <p className="text-sm text-white/80">New Arrivals</p>

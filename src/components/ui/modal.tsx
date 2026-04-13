@@ -61,15 +61,15 @@ function Modal({
   return (
     <Fragment>
       <div
-        className="fixed inset-0 z-[var(--z-modal)] bg-black/50 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={closeOnBackdrop ? onClose : undefined}
         aria-hidden="true"
       />
-      <div className="fixed inset-0 z-[var(--z-modal)] overflow-y-auto">
+      <div className="fixed inset-0 z-60 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <div
             className={cn(
-              'relative w-full bg-[var(--card)] text-[var(--card-foreground)] rounded-xl shadow-2xl',
+              'relative w-full bg-white text-[#0A0B10] rounded-xl shadow-2xl',
               'transform transition-all animate-fade-in',
               sizeClasses[size],
               className

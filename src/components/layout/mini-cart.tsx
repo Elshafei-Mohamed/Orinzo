@@ -29,14 +29,14 @@ export function MiniCart() {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 z-[var(--z-modal)] bg-black/50 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm animate-fade-in"
           onClick={closeCart}
         />
       )}
       
       <div
         className={cn(
-          'fixed top-0 right-0 z-[var(--z-modal)] h-full w-full max-w-md bg-[var(--card)] shadow-2xl',
+          'fixed top-0 right-0 z-60 h-full w-full max-w-md bg-white shadow-2xl',
           'transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
@@ -123,7 +123,7 @@ export function MiniCart() {
                           </div>
                           <button
                             onClick={() => removeItem(item.product.id)}
-                            className="text-sm text-[var(--muted-foreground)] hover:text-[#d13239] transition-colors"
+                            className="text-sm text-[var(--muted-foreground)] hover:text-[var(--error)] transition-colors"
                           >
                             Remove
                           </button>
@@ -151,7 +151,7 @@ export function MiniCart() {
                     </Button>
                   </Link>
                   <Link href="/checkout" onClick={closeCart}>
-                    <Button className="w-full bg-[#ff9900] hover:bg-[#e68a00]">Checkout</Button>
+                    <Button className="w-full">Checkout</Button>
                   </Link>
                 </div>
               </div>

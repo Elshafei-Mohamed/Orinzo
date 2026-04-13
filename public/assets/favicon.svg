@@ -1,0 +1,29 @@
+<svg width="200" height="200" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purpleGradient" x1="250" y1="450" x2="100" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0.1" stop-color="#4169E1" /> <stop offset="0.5" stop-color="#8E44AD" /> <stop offset="0.9" stop-color="#B74DFB" /> </linearGradient>
+
+    <linearGradient id="goldGradient" x1="100" y1="250" x2="400" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4D07C" /> <stop offset="0.5" stop-color="#E1B35C" /> <stop offset="0.9" stop-color="#8D6A32" /> </linearGradient>
+  </defs>
+
+  <g id="geometry">
+    <path id="ring-outer" d="M250 50C139.543 50 50 139.543 50 250C50 360.457 139.543 450 250 450V350C194.772 350 150 305.228 150 250C150 194.772 194.772 150 250 150V50Z" fill="url(#goldGradient)" />
+
+    <path id="ring-purple-side" d="M50 250C50 139.543 139.543 50 250 50V150C194.772 150 150 194.772 150 250C150 305.228 194.772 350 250 350V450C139.543 450 50 360.457 50 250Z" fill="url(#purpleGradient)" />
+
+    <path id="ring-gold-overlay" d="M250 50C360.457 50 450 139.543 450 250C450 360.457 360.457 450 250 450V350C305.228 350 350 305.228 350 250C350 194.772 305.228 150 250 150V50Z" fill="url(#goldGradient)" />
+    
+    <path id="ring-edge-fix" d="M250 50C260 50 270 52 280 55L280 155C270 152 260 150 250 150V50Z" fill="url(#goldGradient)" opacity="0.8"/>
+  </g>
+
+  <g id="arrow">
+    <path d="M180 250L350 250L310 280H180V250Z" fill="#1A1A1A" /> <path d="M180 220L350 250L180 250V220Z" fill="#222222" /> </g>
+
+  <g id="speed-lines">
+    <rect x="130" y="220" width="70" height="12" rx="6" fill="#D7BDE2" />
+    <rect x="160" y="245" width="85" height="12" rx="6" fill="#AF7AC5" />
+    <rect x="145" y="270" width="75" height="12" rx="6" fill="#9B59B6" />
+    <rect x="120" y="295" width="60" height="12" rx="6" fill="#8E44AD" />
+  </g>
+</svg>

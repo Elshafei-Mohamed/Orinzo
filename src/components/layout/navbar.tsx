@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -57,30 +57,35 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-      setIsSearchOpen(false);
-    }
-  };
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        router.push(
+          `/products?search=${encodeURIComponent(searchQuery.trim())}`,
+        );
+        setSearchQuery("");
+        setIsSearchOpen(false);
+      }
+    },
+    [searchQuery, router],
+  );
 
-  const handleDropdownEnter = (categoryId: string) => {
+  const handleDropdownEnter = useCallback((categoryId: string) => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
     setActiveDropdown(categoryId);
-  };
+  }, []);
 
-  const handleDropdownLeave = () => {
+  const handleDropdownLeave = useCallback(() => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
     }, 150);
-  };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-[var(--z-sticky-header)] bg-[var(--navbar-bg)] text-[var(--navbar-foreground)] border-b border-[var(--navbar-border)]">
+    <header className="sticky top-0 z-40 bg-white text-[#0A0B10] border-b border-[#e9ecef]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center gap-4">
           <button
@@ -95,17 +100,18 @@ export function Navbar() {
             )}
           </button>
 
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="relative h-10 w-10 sm:h-12 sm:w-12">
               <Image
-                src="/assets/orinzo.png"
+                src="/assets/icon.png"
                 alt="Orinzo Logo"
                 fill
+                sizes="48px"
                 className="object-contain"
                 priority
               />
             </div>
-            <span className="hidden font-display text-xl font-bold sm:block text-[var(--navbar-foreground)]">
+            <span className="hidden font-display text-xl font-bold sm:block text-[#0A0B10]">
               Orinzo
             </span>
           </Link>
@@ -117,11 +123,11 @@ export function Navbar() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 w-full bg-[var(--muted)] border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] pr-10 rounded-lg"
+                className="h-10 w-full bg-(--muted) border-(--border) text-(--foreground) placeholder:text-(--muted-foreground) pr-10 rounded-lg"
               />
               <button
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-(--foreground)"
               >
                 <Search className="h-5 w-5" />
               </button>
@@ -130,7 +136,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-2 sm:gap-4">
             <button
-              className="lg:hidden p-2 hover:bg-[var(--muted)] rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-(--muted) rounded-lg transition-colors"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
               <Search className="h-5 w-5" />
@@ -138,7 +144,7 @@ export function Navbar() {
 
             <button
               onClick={toggleTheme}
-              className="hidden sm:flex p-2 hover:bg-[var(--muted)] rounded-lg transition-colors"
+              className="hidden sm:flex p-2 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Toggle theme"
             >
               {resolvedTheme === "dark" ? (
@@ -150,12 +156,12 @@ export function Navbar() {
 
             <Link
               href="/wishlist"
-              className="relative p-2 hover:bg-[var(--muted)] rounded-lg transition-colors"
+              className="relative p-2 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] text-xs font-medium">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--accent) text-(--accent-foreground) text-xs font-medium">
                   {wishlistCount}
                 </span>
               )}
@@ -163,12 +169,12 @@ export function Navbar() {
 
             <button
               onClick={openCart}
-              className="relative p-2 hover:bg-[var(--muted)] rounded-lg transition-colors"
+              className="relative p-2 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Shopping cart"
             >
               <ShoppingCart className="h-5 w-5" />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] text-xs font-medium animate-bounce">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--accent) text-(--accent-foreground) text-xs font-medium animate-bounce">
                   {itemCount}
                 </span>
               )}
@@ -178,9 +184,9 @@ export function Navbar() {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-2 hover:bg-[var(--muted)] rounded-lg transition-colors"
+                  className="flex items-center gap-2 p-2 hover:bg-(--muted) rounded-lg transition-colors"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] text-sm font-medium">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--accent) text-(--accent-foreground) text-sm font-medium">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <span className="hidden md:block text-sm">
@@ -190,18 +196,18 @@ export function Navbar() {
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-xl border border-[var(--border)] bg-[var(--card)] py-2 shadow-xl z-[var(--z-dropdown)] animate-slide-down">
-                    <div className="px-4 py-2 border-b border-[var(--border)]">
-                      <p className="font-medium text-[var(--foreground)]">
+                  <div className="absolute right-0 mt-2 w-56 rounded-xl border border-(--border) bg-(--card) py-2 shadow-xl z-(--z-dropdown) animate-slide-down">
+                    <div className="px-4 py-2 border-b border-(--border)">
+                      <p className="font-medium text-(--foreground)">
                         {user.name}
                       </p>
-                      <p className="text-sm text-[var(--muted-foreground)]">
+                      <p className="text-sm text-(--muted-foreground)">
                         {user.email}
                       </p>
                     </div>
                     <Link
                       href="/orders"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-(--foreground) hover:bg-(--muted) transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
                       <Package className="h-4 w-4" />
@@ -213,7 +219,7 @@ export function Navbar() {
                         setIsUserMenuOpen(false);
                         router.push("/");
                       }}
-                      className="flex w-full items-center gap-3 px-4 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+                      className="flex w-full items-center gap-3 px-4 py-2 text-sm text-(--foreground) hover:bg-(--muted) transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Sign Out
@@ -231,10 +237,10 @@ export function Navbar() {
           </div>
         </div>
 
-        <div className="hidden lg:flex h-12 items-center gap-1 border-t border-[var(--navbar-border)]">
+        <div className="hidden lg:flex h-12 items-center gap-1 border-t border-gray-200">
           <Link
             href="/products"
-            className="flex items-center gap-1 px-3 py-2 text-sm font-medium hover:text-[var(--accent)] transition-colors"
+            className="flex items-center gap-1 px-3 py-2 text-sm font-medium hover:text-[#B34BFF] transition-colors"
           >
             All Products
           </Link>
@@ -251,8 +257,8 @@ export function Navbar() {
                 className={cn(
                   "flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors",
                   activeDropdown === category.id
-                    ? "text-[var(--accent)]"
-                    : "hover:text-[var(--accent)]",
+                    ? "text-[#B34BFF]"
+                    : "hover:text-[#B34BFF]",
                 )}
               >
                 {category.name}
@@ -261,7 +267,7 @@ export function Navbar() {
 
               {activeDropdown === category.id && (
                 <div
-                  className="absolute left-0 top-full w-[400px] bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-xl z-[var(--z-dropdown)] animate-slide-down"
+                  className="absolute left-0 top-full w-100 bg-white border border-gray-200 rounded-xl shadow-xl z-35 animate-slide-down"
                   onMouseEnter={() => handleDropdownEnter(category.id)}
                 >
                   <div className="p-4 grid grid-cols-2 gap-2">
@@ -269,10 +275,10 @@ export function Navbar() {
                       <Link
                         key={childSlug}
                         href={`/products?category=${childSlug}`}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--muted)] text-[var(--foreground)] text-sm transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-900 text-sm transition-colors"
                         onClick={() => setActiveDropdown(null)}
                       >
-                        <ChevronRight className="h-3 w-3 text-[var(--muted-foreground)]" />
+                        <ChevronRight className="h-3 w-3 text-gray-500" />
                         {childSlug
                           .replace(/-/g, " ")
                           .replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -287,19 +293,19 @@ export function Navbar() {
       </div>
 
       {isSearchOpen && (
-        <div className="lg:hidden border-t border-[var(--navbar-border)] p-4 animate-fade-in">
+        <div className="lg:hidden border-t border-gray-200 p-4 animate-fade-in">
           <form onSubmit={handleSearch} className="relative">
             <Input
               type="search"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-10 w-full bg-[var(--muted)] border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] pr-10 rounded-lg"
+              className="h-10 w-full bg-gray-100 border border-gray-200 text-gray-900 placeholder:text-gray-500 pr-10 rounded-lg"
               autoFocus
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900"
             >
               <Search className="h-5 w-5" />
             </button>
@@ -308,25 +314,25 @@ export function Navbar() {
       )}
 
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-[var(--navbar-border)] py-4 animate-fade-in z-[var(--z-dropdown)]">
+        <div className="lg:hidden border-t border-gray-200 py-4 animate-fade-in z-35">
           <nav className="px-4 space-y-1">
             <Link
               href="/products"
-              className="block py-2 text-sm font-medium hover:text-[var(--accent)] transition-colors"
+              className="block py-2 text-sm font-medium hover:text-[#B34BFF] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               All Products
             </Link>
             {NAVIGATION_CATEGORIES.map((category) => (
               <div key={category.id}>
-                <p className="py-2 text-sm font-semibold text-[var(--muted-foreground)]">
+                <p className="py-2 text-sm font-semibold text-gray-500">
                   {category.name}
                 </p>
                 {category.children.map((childSlug) => (
                   <Link
                     key={childSlug}
                     href={`/products?category=${childSlug}`}
-                    className="block py-2 pl-4 text-sm hover:text-[var(--accent)] transition-colors"
+                    className="block py-2 pl-4 text-sm hover:text-[#B34BFF] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {childSlug

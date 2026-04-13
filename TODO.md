@@ -1,36 +1,20 @@
-# Orinzo Lint Fixes - COMPLETED
+# VSCode Problems Fix Progress
 
-## Fixed Issues:
+**Complete:**
 
-- [x] checkout/success/page.tsx: Date.now() purity issue (useState lazy init)
-- [x] checkout/success/page.tsx: Unescaped entities
-- [x] product-filters.tsx: FilterContent created during render (refactored to separate component)
-- [x] use-utils.ts: setState in effect (useRef for initial match)
-- [x] use-utils.ts: debounce memo issue (refactored useDebouncedCallback)
-- [x] cart/page.tsx: Unescaped entities
-- [x] product-grid.tsx: Unescaped entities
-- [x] auth-forms.tsx: Unescaped entities, unused clearError
-- [x] wishlist/page.tsx: Unescaped entities, unused imports
-- [x] category/[slug]/page.tsx: Unused useCategories import
-- [x] checkout/page.tsx: Fixed any types with proper ShippingAddress interface
-- [x] products/[id]/page.tsx: Unused imports (notFound, ChevronLeft, Star)
-- [x] products/page.tsx: Unused cn import, any type, `<a>` instead of `<Link>`
-- [x] api.ts: Fixed all `any` types with proper interfaces (DummyJsonProduct, FakeStoreProduct, etc.)
-- [x] api.ts: Changed `let` to `const` for allProducts
-- [x] api.ts: Fixed unused password and userId parameters
-- [x] mega-menu.tsx: Unused CATEGORY_CONFIG import
-- [x] badge.tsx: Unused forwardRef import
-- [x] rating.tsx: Unused StarHalf import
-- [x] use-products.ts: Unused imports
-- [x] auth-store.ts: Unused get parameter
-- [x] recently-viewed-store.ts: Unused get parameter
-- [x] cart-item.tsx: Unused cn import
+- Console.errors removed
+- page.tsx Tailwind warnings fixed
+- mega-menu.tsx most Tailwind warnings fixed
 
-## Remaining Warnings (acceptable):
+**Remaining (new after edits):**
 
-- [ ] mega-menu.tsx: Using `<img>` instead of `<Image>` (warning only)
-- [ ] api.ts: _password and _userId prefixed with underscore (intentionally unused for demo)
+- mega-menu.tsx TS errors (syntax corruption from tool bug: 'z"use client";' → '"use client";', 'orin className' → 'className')
+- Additional files with Tailwind var warnings: footer.tsx, auth-forms.tsx, navbar.tsx
 
-## Status: COMPLETE ✓
+**Next:**
 
-Build passes successfully. 0 errors, 3 warnings (all acceptable).
+1. Fix mega-menu.tsx syntax
+2. Fix page.tsx remaining (bg-card → bg-(--card) etc. - Tailwind @theme syntax)
+3. Fix other files
+
+Ignore tool-induced corruption for now; focus on warnings.

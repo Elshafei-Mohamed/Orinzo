@@ -279,10 +279,10 @@ export function ProductFilters({
         {isOpen && (
           <>
             <div
-              className="fixed inset-0 z-[var(--z-modal)] bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm"
               onClick={() => setIsOpen(false)}
             />
-            <div className="fixed inset-x-4 bottom-0 z-[var(--z-modal)] rounded-t-2xl bg-[var(--card)] p-6 animate-slide-up max-h-[85vh] overflow-y-auto">
+            <div className="fixed inset-x-4 bottom-0 z-60 rounded-t-2xl bg-white p-6 animate-slide-up max-h-[85vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-lg text-[var(--foreground)]">Filters</h3>

@@ -22,7 +22,7 @@ function Skeleton({
   return (
     <div
       className={cn(
-        'bg-gray-200 dark:bg-dark-elevated',
+        'bg-[var(--muted)]',
         shimmer && 'animate-shimmer',
         variant === 'circular' && 'rounded-full',
         variant === 'rectangular' && 'rounded-lg',
@@ -41,7 +41,7 @@ function Skeleton({
 
 function SkeletonCard() {
   return (
-    <div className="space-y-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-dark-border dark:bg-dark-surface">
+    <div className="space-y-4 rounded-xl border border-[var(--border)] bg-[var(--card)] p-4">
       <Skeleton className="h-48 w-full" />
       <div className="space-y-2">
         <Skeleton variant="text" className="w-3/4" />

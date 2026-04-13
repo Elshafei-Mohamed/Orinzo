@@ -107,7 +107,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             className={cn(
               'flex h-9 w-9 items-center justify-center rounded-full bg-[var(--card)] shadow-md transition-all',
               'hover:scale-110',
-              isWishlisted && 'text-[#d13239]'
+              isWishlisted && 'text-[#dc3545]'
             )}
           >
             <Heart className={cn('h-5 w-5', isWishlisted && 'fill-current')} />
@@ -145,9 +145,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
           className={cn(
             'mt-4 flex items-center justify-center gap-2 rounded-lg py-2.5 px-4',
             'font-medium text-sm transition-all duration-200',
-            'bg-[#ff9900] text-white hover:bg-[#e68a00] active:scale-[0.98]',
+            'bg-gradient-to-r from-[#B34BFF] via-[#6032E6] to-[#1D34C3] text-white hover:opacity-90 active:scale-[0.98]',
             'disabled:bg-[var(--muted)] disabled:text-[var(--muted-foreground)] disabled:cursor-not-allowed',
-            isAdding && 'bg-[#067d62]'
+            isAdding && 'bg-gradient-to-r from-[#198754] via-[#10b981] to-[#059669]'
           )}
         >
           {isAdding ? (

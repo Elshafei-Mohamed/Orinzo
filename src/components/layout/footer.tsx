@@ -49,7 +49,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-3 mb-4">
               <div className="relative h-12 w-12">
                 <Image
-                  src="/assets/orinzo.png"
+                  src="/assets/icon.png"
                   alt={`${siteData.name} Logo`}
                   fill
                   className="object-contain"

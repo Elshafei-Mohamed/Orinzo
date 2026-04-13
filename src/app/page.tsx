@@ -69,7 +69,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative h-125 sm:h-150 overflow-hidden">
+      <section className="relative min-h-screen overflow-hidden">
         {HERO_SLIDES.map((slide, index) => (
           <div
             key={slide.id}
@@ -78,17 +78,24 @@ export default function HomePage() {
               index === currentSlide ? "opacity-100" : "opacity-0",
             )}
           >
-            <div className="absolute inset-0 bg-linear-to-r from-black/60 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent z-10" />
             <Image
               src={slide.image}
               alt={slide.title}
               fill
               className="object-cover"
               priority={index === 0}
+              sizes="100vw"
             />
-            <div className="absolute inset-0 z-20 flex items-center h-full">
-              <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-                <div className="max-w-xl animate-fade-in">
+            <div className="absolute inset-0 z-20 flex items-center">
+              <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="max-w-xl animate-fade-in pl-0 lg:pl-12">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                    {slide.title}
+                  </h1>
+                  <p className="text-lg sm:text-xl text-white/80 mb-6">
+                    {slide.subtitle}
+                  </p>
                   <Link href={slide.link}>
                     <Button
                       size="lg"

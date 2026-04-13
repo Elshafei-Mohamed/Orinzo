@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
+import ClientLayout from "./client-layout";
 import { Navbar, Footer, MiniCart } from "@/components/layout";
 import { siteData } from "@/data";
 
@@ -41,14 +42,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className="h-full flex flex-col antialiased">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <MiniCart />
+          <ClientLayout>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <MiniCart />
+          </ClientLayout>
         </Providers>
       </body>
     </html>

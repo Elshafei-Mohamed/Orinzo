@@ -248,7 +248,7 @@ export const HERO_SLIDES = [
     title: "Summer Collection 2026",
     subtitle: "Discover the latest trends in fashion",
     image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop",
     cta: "Shop Now",
     link: "/products",
   },
@@ -257,7 +257,7 @@ export const HERO_SLIDES = [
     title: "Premium Electronics",
     subtitle: "Upgrade your tech game with the latest gadgets",
     image:
-      "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1600&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1920&h=1080&fit=crop",
     cta: "Explore",
     link: "/products?category=smartphones",
   },
@@ -266,7 +266,7 @@ export const HERO_SLIDES = [
     title: "Home Makeover",
     subtitle: "Transform your living space with style",
     image:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&h=1080&fit=crop",
     cta: "Discover",
     link: "/products?category=home-decoration",
   },
