@@ -30,14 +30,11 @@ function ProductsContent() {
     minPrice: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
     maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
     minRating: searchParams.get('minRating') ? Number(searchParams.get('minRating')) : undefined,
-    search: searchQuery || undefined,
+    query: searchQuery || undefined,
   }), [searchParams, searchQuery]);
 
   const queryFilters = useMemo(() => ({
-    category: filters.category,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice,
-    minRating: filters.minRating,
+    ...filters,
     sortBy: sortBy as 'popular' | 'price-asc' | 'price-desc' | 'rating' | 'newest',
   }), [filters, sortBy]);
 

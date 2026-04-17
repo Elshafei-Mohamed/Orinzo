@@ -103,7 +103,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 bg-white text-[#0A0B10] border-b border-[#e9ecef]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex h-14 items-center gap-2 sm:gap-3">
+        <div className="flex h-14 items-center gap-4 sm:gap-6">
           <button
             className="lg:hidden p-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -116,13 +116,13 @@ export function Navbar() {
             )}
           </button>
 
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <div className="relative h-8 w-8 sm:h-9 sm:w-9">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="relative h-8 w-8">
               <Image
                 src="/assets/icon.png"
                 alt="Orinzo Logo"
                 fill
-                sizes="40px"
+                sizes="32px"
                 className="object-contain"
                 priority
               />
@@ -132,7 +132,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <div className="hidden lg:block flex-1 max-w-lg mx-2">
+          <div className="hidden lg:block flex-1 max-w-md ml-4 mr-2">
             <form onSubmit={handleSearch} className="relative">
               <Input
                 type="search"
@@ -150,7 +150,7 @@ export function Navbar() {
             </form>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5 ml-auto">
             <button
               className="lg:hidden p-1.5 hover:bg-(--muted) rounded-lg transition-colors"
               onClick={() => setIsSearchOpen(!isSearchOpen)}

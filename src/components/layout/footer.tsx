@@ -44,26 +44,26 @@ export function Footer() {
   return (
     <footer className="bg-[var(--secondary)] text-[var(--secondary-foreground)] border-t border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="py-12 grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+        <div className="py-8 grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="relative h-12 w-12">
+            <Link href="/" className="flex items-center gap-2 mb-3">
+              <div className="relative h-10 w-10">
                 <Image
                   src="/assets/icon.png"
                   alt={`${siteData.name} Logo`}
                   fill
-                  sizes="48px"
+                  sizes="40px"
                   className="object-contain"
                 />
               </div>
-              <span className="font-display text-xl font-bold text-[var(--foreground)]">
+              <span className="font-display text-lg font-bold text-[var(--foreground)]">
                 {siteData.name}
               </span>
             </Link>
-            <p className="text-sm text-[var(--muted-foreground)] mb-4">
+            <p className="text-sm text-[var(--muted-foreground)] mb-3">
               {siteData.tagline}
             </p>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <a
                 href={`mailto:${siteData.contact.email}`}
                 className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors"
@@ -78,18 +78,14 @@ export function Footer() {
                 <Phone className="h-4 w-4 shrink-0" />
                 {siteData.contact.phone}
               </a>
-              <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
-                <MapPin className="h-4 w-4 shrink-0" />
-                {siteData.contact.formattedAddress}
-              </div>
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-[var(--foreground)]">
+            <h3 className="font-semibold mb-3 text-sm text-[var(--foreground)]">
               Shop
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5">
               {siteData.links.shop.map((link) => (
                 <li key={link.name}>
                   <Link

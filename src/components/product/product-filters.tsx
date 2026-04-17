@@ -269,7 +269,7 @@ export function ProductFilters({
   return (
     <>
       <div className="hidden lg:block w-64 flex-shrink-0">
-        <div className={cn('sticky top-24', className)}>
+        <div className={cn('sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pr-2', className)}>
           <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-[var(--foreground)]">Filters</h3>

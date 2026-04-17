@@ -168,11 +168,15 @@ function applyFiltersAndSort(
     const query = filters.query.toLowerCase().trim();
     if (query) {
       result = result.filter((p) => {
+        const config = CATEGORY_CONFIG[p.category as keyof typeof CATEGORY_CONFIG];
+        const categoryDisplayName = config ? config.displayName : p.category;
+
         const searchFields = [
           p.id.toLowerCase(),
           p.title.toLowerCase(),
           p.description.toLowerCase(),
           p.category.toLowerCase(),
+          categoryDisplayName.toLowerCase(),
           p.brand?.toLowerCase() || '',
           ...(p.tags || []),
         ];
@@ -262,8 +266,13 @@ class MultiApiService {
         }
       }
     } else {
+      // If there's a search query, we can optimize by using dummyjson search API
+      const djUrl = filters?.query 
+        ? `${DUMMYJSON_BASE}/products/search?q=${encodeURIComponent(filters.query)}&limit=100`
+        : `${DUMMYJSON_BASE}/products?limit=100`;
+
       const [djData, fsData] = await Promise.all([
-        fetchWithCache<{ products: DummyJsonProduct[] }>(`${DUMMYJSON_BASE}/products?limit=100`),
+        fetchWithCache<{ products: DummyJsonProduct[] }>(djUrl),
         fetchWithCache<FakeStoreProduct[]>(`${FAKESTORE_BASE}/products`),
       ]);
 
@@ -327,56 +336,7 @@ class MultiApiService {
     limit = 20,
     skip = 0,
   ): Promise<PaginatedResponse<Product>> {
-    const allProducts: Product[] = [];
-    const seenIds = new Set<string>();
-    const queryLower = query.toLowerCase();
-
-    const [djData, fsData] = await Promise.all([
-      fetchWithCache<{ products: DummyJsonProduct[] }>(
-        `${DUMMYJSON_BASE}/products/search?q=${encodeURIComponent(query)}&limit=50`,
-      ),
-      fetchWithCache<FakeStoreProduct[]>(`${FAKESTORE_BASE}/products`),
-    ]);
-
-    if (djData?.products) {
-      djData.products.forEach((p) => {
-        if (!seenIds.has(`dj-${p.id}`)) {
-          seenIds.add(`dj-${p.id}`);
-          allProducts.push(transformDummyJsonProduct(p));
-        }
-      });
-    }
-
-    if (fsData) {
-      fsData.forEach((p) => {
-        if (!seenIds.has(`fs-${p.id}`)) {
-          seenIds.add(`fs-${p.id}`);
-          allProducts.push(transformFakeStoreProduct(p));
-        }
-      });
-    }
-
-    const filtered = applyFiltersAndSort(allProducts);
-    const queryFiltered = filtered.filter(
-      (p) =>
-        p.title.toLowerCase().includes(queryLower) ||
-        p.description.toLowerCase().includes(queryLower),
-    );
-
-    const total = queryFiltered.length;
-    const startIndex = skip;
-    const paginatedProducts = queryFiltered.slice(
-      startIndex,
-      startIndex + limit,
-    );
-
-    return {
-      data: paginatedProducts,
-      total,
-      page: Math.floor(skip / limit) + 1,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    };
+    return this.getProducts(limit, skip, { query });
   }
 
   async getCategories(): Promise<Category[]> {
