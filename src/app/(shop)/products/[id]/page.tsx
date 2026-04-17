@@ -107,6 +107,7 @@ export default function ProductDetailPage() {
                 fill
                 className="object-cover"
                 priority
+                unoptimized
               />
               {discount > 0 && (
                 <Badge variant="error" className="absolute top-4 left-4">
@@ -133,6 +134,7 @@ export default function ProductDetailPage() {
                       alt={`${product.title} - ${index + 1}`}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   </button>
                 ))}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { X, SlidersHorizontal, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
@@ -85,6 +85,10 @@ interface FilterContentProps {
 }
 
 function FilterContent({ localFilters, setLocalFilters, categories, onReset, onApply }: FilterContentProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const visibleCategories = isExpanded ? categories : categories.slice(0, 8);
+  const hiddenCount = categories.length - 8;
+
   const handlePriceRangeChange = (range: typeof PRICE_RANGES[0] | null) => {
     if (range) {
       setLocalFilters({
@@ -110,7 +114,7 @@ function FilterContent({ localFilters, setLocalFilters, categories, onReset, onA
             checked={!localFilters.category}
             onChange={() => setLocalFilters({ ...localFilters, category: undefined })}
           />
-          {categories.slice(0, 8).map((cat) => (
+          {visibleCategories.map((cat) => (
             <RadioOption
               key={cat.slug}
               label={cat.name}
@@ -118,9 +122,12 @@ function FilterContent({ localFilters, setLocalFilters, categories, onReset, onA
               onChange={() => setLocalFilters({ ...localFilters, category: cat.slug })}
             />
           ))}
-          {categories.length > 8 && (
-            <button className="text-xs text-[var(--accent)] hover:underline mt-2 ml-2">
-              Show {categories.length - 8} more...
+          {hiddenCount > 0 && (
+            <button 
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs text-[var(--accent)] hover:underline mt-2 ml-2 font-medium"
+            >
+              {isExpanded ? 'Show less' : `Show ${hiddenCount} more...`}
             </button>
           )}
         </div>
@@ -214,13 +221,32 @@ export function ProductFilters({
 }: ProductFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [localFilters, setLocalFilters] = useState(filters);
+  const isApplyingRef = useRef(false);
+  const prevFiltersRef = useRef<string>(JSON.stringify(filters));
+  const filtersRef = useRef(filters);
+
+  useEffect(() => {
+    const currentFilters = JSON.stringify(filters);
+    if (currentFilters !== prevFiltersRef.current && !isApplyingRef.current) {
+      queueMicrotask(() => {
+        setLocalFilters(filters);
+        prevFiltersRef.current = currentFilters;
+      });
+    }
+    filtersRef.current = filters;
+  }, [filters]);
 
   const handleApply = useCallback(() => {
+    isApplyingRef.current = true;
     onFilterChange(localFilters);
     setIsOpen(false);
+    queueMicrotask(() => {
+      isApplyingRef.current = false;
+    });
   }, [localFilters, onFilterChange]);
 
   const handleReset = useCallback(() => {
+    isApplyingRef.current = true;
     const resetFilters = {
       minPrice: undefined,
       maxPrice: undefined,
@@ -229,6 +255,9 @@ export function ProductFilters({
     };
     setLocalFilters(resetFilters);
     onFilterChange(resetFilters);
+    queueMicrotask(() => {
+      isApplyingRef.current = false;
+    });
   }, [onFilterChange]);
 
   const activeFilterCount = [

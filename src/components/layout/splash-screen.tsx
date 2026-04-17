@@ -80,15 +80,17 @@ export function SplashScreen({
 
 export function useSplashScreen(duration = 2500) {
   const [showSplash, setShowSplash] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    if (sessionStorage.getItem("orinzo-splash-seen") === "true") {
-      setShowSplash(false);
-      setIsLoading(false);
-    }
+    const checkSplash = () => {
+      setMounted(true);
+      if (sessionStorage.getItem("orinzo-splash-seen") === "true") {
+        setShowSplash(false);
+      }
+    };
+    const timer = requestAnimationFrame(checkSplash);
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   const handleSplashComplete = useCallback(() => {
@@ -96,7 +98,6 @@ export function useSplashScreen(duration = 2500) {
       sessionStorage.setItem("orinzo-splash-seen", "true");
     }
     setShowSplash(false);
-    setTimeout(() => setIsLoading(false), 100);
   }, []);
 
   return {

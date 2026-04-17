@@ -181,6 +181,7 @@ export default function CheckoutPage() {
                               alt={item.product.title}
                               fill
                               className="object-cover"
+                              unoptimized
                             />
                           </div>
                           <div className="flex-1">

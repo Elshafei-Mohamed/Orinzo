@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -51,17 +52,23 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [T, (value: T | ((val: T) => T)) => void] {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch {
-      return initialValue;
-    }
-  });
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    const loadStoredValue = () => {
+      try {
+        const item = window.localStorage.getItem(key);
+        if (item) {
+          setStoredValue(JSON.parse(item));
+        }
+      } catch {
+        // Silently handle errors
+      }
+      setIsHydrated(true);
+    };
+    queueMicrotask(loadStoredValue);
+  }, [key]);
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
@@ -75,6 +82,10 @@ export function useLocalStorage<T>(
       // Silently handle storage errors
     }
   };
+
+  if (!isHydrated) {
+    return [initialValue, setValue];
+  }
 
   return [storedValue, setValue];
 }
@@ -128,4 +139,49 @@ export function useScrollPosition() {
   }, []);
 
   return scrollPosition;
+}
+
+export function useSearchParam() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
+  const debouncedValue = useDebounce(searchQuery, 400);
+  const isSearching = searchQuery !== debouncedValue;
+  const prevSearchRef = useRef<string>('');
+
+  useEffect(() => {
+    if (debouncedValue !== prevSearchRef.current) {
+      prevSearchRef.current = debouncedValue;
+      
+      if (debouncedValue) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('q', debouncedValue);
+        const newUrl = `${pathname}?${params.toString()}`;
+        router.push(newUrl, { scroll: false });
+      } else {
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('q');
+        const newUrl = `${pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+        router.push(newUrl, { scroll: false });
+      }
+    }
+  }, [debouncedValue, pathname, router, searchParams]);
+
+  const setSearch = useCallback((value: string) => {
+    setSearchQuery(value);
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setSearchQuery('');
+  }, []);
+
+  return {
+    searchQuery,
+    setSearch,
+    clearSearch,
+    debouncedSearch: debouncedValue,
+    isSearching,
+    hasSearch: !!searchParams.get('q'),
+  };
 }

@@ -164,6 +164,23 @@ function applyFiltersAndSort(
 ): Product[] {
   let result = [...products];
 
+  if (filters?.query) {
+    const query = filters.query.toLowerCase().trim();
+    if (query) {
+      result = result.filter((p) => {
+        const searchFields = [
+          p.id.toLowerCase(),
+          p.title.toLowerCase(),
+          p.description.toLowerCase(),
+          p.category.toLowerCase(),
+          p.brand?.toLowerCase() || '',
+          ...(p.tags || []),
+        ];
+        return searchFields.some(field => field.includes(query));
+      });
+    }
+  }
+
   if (filters?.category) {
     result = result.filter((p) => {
       const productCategory = p.category.toLowerCase().replace(/['\s]/g, "-");

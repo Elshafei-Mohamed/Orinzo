@@ -18,4 +18,5 @@ export {
   useIsTablet,
   useIsDesktop,
   useScrollPosition,
+  useSearchParam,
 } from './use-utils';

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ShoppingCart, Eye, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Check } from 'lucide-react';
 import { cn, formatPrice, calculateDiscount } from '@/lib/utils';
 import { Product } from '@/types';
 import { Badge, Rating, useToast } from '@/components/ui';
@@ -14,13 +14,23 @@ interface ProductCardProps {
   className?: string;
 }
 
+const isExternalImage = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return parsed.origin !== window.location.origin;
+  } catch {
+    return true;
+  }
+};
+
 export function ProductCard({ product, className }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   
-  const { addItem } = useCartStore();
-  const { isInWishlist, toggleItem } = useWishlistStore();
+  const addItem = useCartStore((state) => state.addItem);
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
+  const toggleItem = useWishlistStore((state) => state.toggleItem);
   const { addToast } = useToast();
   
   const isWishlisted = isInWishlist(product.id);
@@ -28,7 +38,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
     ? calculateDiscount(product.originalPrice, product.price)
     : 0;
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -39,9 +49,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
     addToast('success', `${product.title.substring(0, 30)}... added to cart`);
     
     setTimeout(() => setIsAdding(false), 600);
-  };
+  }, [isAdding, addItem, product, addToast]);
 
-  const handleToggleWishlist = (e: React.MouseEvent) => {
+  const handleToggleWishlist = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     toggleItem(product);
@@ -49,7 +59,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
       isWishlisted ? 'info' : 'success',
       isWishlisted ? 'Removed from wishlist' : 'Added to wishlist'
     );
-  };
+  }, [isWishlisted, toggleItem, product, addToast]);
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const handleImageError = useCallback(() => setImageError(true), []);
+
+  const imageSrc = imageError ? '/placeholder.png' : product.image;
 
   return (
     <Link
@@ -60,28 +76,22 @@ export function ProductCard({ product, className }: ProductCardProps) {
         'hover:shadow-lg hover:-translate-y-1 hover:border-[var(--ring)]',
         className
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="relative aspect-square overflow-hidden rounded-t-xl bg-[var(--muted)]">
-        {!imageError ? (
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className={cn(
-              'object-cover transition-transform duration-300',
-              isHovered && 'scale-105'
-            )}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-[var(--muted-foreground)]">
-            <Eye className="h-12 w-12 mb-2" />
-            <span className="text-xs">Image unavailable</span>
-          </div>
-        )}
+        <Image
+          src={imageSrc}
+          alt={product.title}
+          fill
+          className={cn(
+            'object-cover transition-transform duration-300',
+            isHovered && 'scale-105'
+          )}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          unoptimized={isExternalImage(product.image)}
+          onError={handleImageError}
+        />
         
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {discount > 0 && (

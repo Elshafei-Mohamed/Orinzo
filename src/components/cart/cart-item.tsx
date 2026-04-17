@@ -26,6 +26,7 @@ export function CartItem({ item }: CartItemProps) {
           alt={item.product.title}
           fill
           className="object-cover"
+          unoptimized
         />
       </Link>
 

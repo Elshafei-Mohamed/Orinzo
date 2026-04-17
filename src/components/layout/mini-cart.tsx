@@ -91,7 +91,9 @@ export function MiniCart() {
                           src={item.product.image}
                           alt={item.product.title}
                           fill
+                          sizes="80px"
                           className="object-cover"
+                          unoptimized
                         />
                       </Link>
                       <div className="flex flex-1 flex-col">

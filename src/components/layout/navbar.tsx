@@ -36,6 +36,7 @@ export function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const userMenuRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { items, openCart } = useCartStore();
   const { user, logout } = useAuthStore();
@@ -57,9 +58,24 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      // Debounced search preparation if needed
+    }, 300);
+  }, []);
+
   const handleSearch = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
       if (searchQuery.trim()) {
         router.push(
           `/products?search=${encodeURIComponent(searchQuery.trim())}`,
@@ -87,81 +103,81 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 bg-white text-[#0A0B10] border-b border-[#e9ecef]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex h-16 items-center gap-4">
+        <div className="flex h-14 items-center gap-2 sm:gap-3">
           <button
-            className="lg:hidden"
+            className="lg:hidden p-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5" />
             )}
           </button>
 
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="relative h-10 w-10 sm:h-12 sm:w-12">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="relative h-8 w-8 sm:h-9 sm:w-9">
               <Image
                 src="/assets/icon.png"
                 alt="Orinzo Logo"
                 fill
-                sizes="48px"
+                sizes="40px"
                 className="object-contain"
                 priority
               />
             </div>
-            <span className="hidden font-display text-xl font-bold sm:block text-[#0A0B10]">
+            <span className="hidden font-display text-lg font-bold sm:block text-[#0A0B10]">
               Orinzo
             </span>
           </Link>
 
-          <div className="hidden lg:block flex-1 max-w-xl">
+          <div className="hidden lg:block flex-1 max-w-lg mx-2">
             <form onSubmit={handleSearch} className="relative">
               <Input
                 type="search"
                 placeholder="Search products..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 w-full bg-(--muted) border-(--border) text-(--foreground) placeholder:text-(--muted-foreground) pr-10 rounded-lg"
+                onChange={handleSearchChange}
+                className="h-9 w-full bg-(--muted) border-(--border) text-(--foreground) placeholder:text-(--muted-foreground) pr-9 rounded-lg text-sm"
               />
               <button
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-(--foreground)"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-(--foreground)"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-4 w-4" />
               </button>
             </form>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
-              className="lg:hidden p-2 hover:bg-(--muted) rounded-lg transition-colors"
+              className="lg:hidden p-1.5 hover:bg-(--muted) rounded-lg transition-colors"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
-              <Search className="h-5 w-5" />
+              <Search className="h-4 w-4" />
             </button>
 
             <button
               onClick={toggleTheme}
-              className="hidden sm:flex p-2 hover:bg-(--muted) rounded-lg transition-colors"
+              className="hidden sm:flex p-1.5 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Toggle theme"
             >
               {resolvedTheme === "dark" ? (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-4 w-4" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-4 w-4" />
               )}
             </button>
 
             <Link
               href="/wishlist"
-              className="relative p-2 hover:bg-(--muted) rounded-lg transition-colors"
+              className="relative p-1.5 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Wishlist"
             >
-              <Heart className="h-5 w-5" />
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--accent) text-(--accent-foreground) text-xs font-medium">
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-(--accent) text-(--accent-foreground) text-[10px] font-medium">
                   {wishlistCount}
                 </span>
               )}
@@ -299,7 +315,7 @@ export function Navbar() {
               type="search"
               placeholder="Search products..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               className="h-10 w-full bg-gray-100 border border-gray-200 text-gray-900 placeholder:text-gray-500 pr-10 rounded-lg"
               autoFocus
             />

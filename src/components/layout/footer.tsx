@@ -52,6 +52,7 @@ export function Footer() {
                   src="/assets/icon.png"
                   alt={`${siteData.name} Logo`}
                   fill
+                  sizes="48px"
                   className="object-contain"
                 />
               </div>

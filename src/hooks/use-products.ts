@@ -4,13 +4,25 @@ import { useQuery, useInfiniteQuery, keepPreviousData } from '@tanstack/react-qu
 import { apiService } from '@/services/api';
 import { SearchFilters } from '@/types';
 
+function serializeFilters(filters?: SearchFilters): string {
+  if (!filters) return 'none';
+  return JSON.stringify({
+    query: filters.query,
+    category: filters.category,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    minRating: filters.minRating,
+    sortBy: filters.sortBy,
+  });
+}
+
 export function useProducts(
   limit = 20,
   skip = 0,
   filters?: SearchFilters
 ) {
   return useQuery({
-    queryKey: ['products', { limit, skip, filters }],
+    queryKey: ['products', limit, skip, serializeFilters(filters)],
     queryFn: () => apiService.getProducts(limit, skip, filters),
     staleTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
@@ -19,7 +31,7 @@ export function useProducts(
 
 export function useInfiniteProducts(limit = 12, filters?: SearchFilters) {
   return useInfiniteQuery({
-    queryKey: ['products', 'infinite', { limit, filters }],
+    queryKey: ['products', 'infinite', limit, serializeFilters(filters)],
     queryFn: ({ pageParam = 0 }) => apiService.getProducts(limit, pageParam, filters),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
