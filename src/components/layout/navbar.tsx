@@ -158,7 +158,7 @@ export function Navbar() {
               <Search className="h-4 w-4" />
             </button>
 
-            <button
+            {/* <button
               onClick={toggleTheme}
               className="hidden sm:flex p-1.5 hover:bg-(--muted) rounded-lg transition-colors"
               aria-label="Toggle theme"
@@ -168,7 +168,7 @@ export function Navbar() {
               ) : (
                 <Moon className="h-4 w-4" />
               )}
-            </button>
+            </button> */}
 
             <Link
               href="/wishlist"
